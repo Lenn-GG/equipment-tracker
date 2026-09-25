@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1D4F7A">
+<title>G&amp;G Equipment Requests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#EEF1F4; --surface:#FFFFFF; --surface-2:#F6F8FA; --ink:#16212B; --muted:#5B6875; --line:#D5DCE3;
+  --accent:#1D4F7A; --accent-ink:#FFFFFF; --accent-soft:#E1ECF6;
+  --pend:#9A6412; --pend-bg:#FDF1DC;
+  --appr:#1D4F7A; --appr-bg:#E1ECF6;
+  --deny:#B42318; --deny-bg:#FDE7E5;
+  --site:#1E7A46; --site-bg:#DFF3E7;
+  --done:#56616C; --done-bg:#E7EAEE;
+  --trans:#7A4E9E; --trans-bg:#F1E8F8;
+  --shadow:0 1px 2px rgba(22,33,43,.06),0 4px 16px rgba(22,33,43,.06);
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F151B; --surface:#18212A; --surface-2:#1E2832; --ink:#E6ECF1; --muted:#93A1AE; --line:#2A3642;
+    --accent:#6FA8DC; --accent-ink:#0F151B; --accent-soft:#16304A;
+    --pend:#F0B350; --pend-bg:#3A2C12; --appr:#8CBDE8; --appr-bg:#16304A;
+    --deny:#F2837A; --deny-bg:#3D1A17; --site:#6FD49A; --site-bg:#133222; --done:#A5B0BA; --done-bg:#252F39; --trans:#C9A3EA; --trans-bg:#2E2140;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F151B; --surface:#18212A; --surface-2:#1E2832; --ink:#E6ECF1; --muted:#93A1AE; --line:#2A3642;
+  --accent:#6FA8DC; --accent-ink:#0F151B; --accent-soft:#16304A;
+  --pend:#F0B350; --pend-bg:#3A2C12; --appr:#8CBDE8; --appr-bg:#16304A;
+  --deny:#F2837A; --deny-bg:#3D1A17; --site:#6FD49A; --site-bg:#133222; --done:#A5B0BA; --done-bg:#252F39; --trans:#C9A3EA; --trans-bg:#2E2140;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;padding-inline:16px;padding-block:env(safe-area-inset-top,0px) 96px}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:860px;margin:0 auto}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px 14px}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:38px;height:38px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.02em;flex:none}
+.brand h1{font-family:var(--display);font-weight:700;font-size:24px;line-height:1;margin:0;letter-spacing:.01em;text-transform:uppercase}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.who img{width:26px;height:26px;border-radius:50%}
+.role{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--appr)}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.good{background:var(--site);border-color:var(--site);color:var(--surface)}
+.btn.bad{color:var(--deny);border-color:var(--deny)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-block:4px 12px}
+.stage{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 10px 9px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stage .n{font-family:var(--display);font-weight:700;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.stage .l{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.stage.pend .n{color:var(--pend)} .stage.appr .n{color:var(--appr)} .stage.site .n{color:var(--site)} .stage.done .n{color:var(--done)} .stage.trans .n{color:var(--trans)}
+@media (max-width:640px){.pipeline{grid-template-columns:repeat(3,1fr)}}
+
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.search{flex:1 1 220px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 12px;min-height:40px}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);cursor:pointer;user-select:none}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+
+.banner{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted);margin-bottom:12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.list{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;border-left:4px solid var(--c,var(--line))}
+.card[data-s="pending"]{--c:var(--pend)} .card[data-s="approved"]{--c:var(--appr)} .card[data-s="denied"]{--c:var(--deny)}
+.card[data-s="received"]{--c:var(--site)} .card[data-s="released"]{--c:var(--trans)} .card[data-s="returned"],.card[data-s="consumed"]{--c:var(--done)}
+.row1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rid{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.chip{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
+.chip.ex{border-style:dashed}
+.chip.late{border-color:var(--deny);color:var(--deny)}
+.pill{margin-left:auto;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.pending{background:var(--pend-bg);color:var(--pend)} .pill.approved{background:var(--appr-bg);color:var(--appr)}
+.pill.denied{background:var(--deny-bg);color:var(--deny)} .pill.received{background:var(--site-bg);color:var(--site)} .pill.released{background:var(--trans-bg);color:var(--trans)} .pill.returned,.pill.consumed{background:var(--done-bg);color:var(--done)}
+.title{font-family:var(--display);font-weight:700;font-size:21px;line-height:1.15;margin:0;text-wrap:balance}
+.title .q{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+.note{font-size:14px;background:var(--surface-2);border-radius:8px;padding:8px 10px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:6px}
+.step{border-top:3px solid var(--line);padding-top:6px;font-size:12px;color:var(--muted);min-width:0}
+.step .sl{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+.step .sw{color:var(--ink);font-weight:600;overflow-wrap:anywhere}
+.step .sx{overflow-wrap:anywhere}
+.step.on{border-top-color:var(--c)} .step.on .sl{color:var(--c)}
+.step.no{border-top-color:var(--deny)} .step.no .sl{color:var(--deny)}
+@media (max-width:640px){.steps{grid-template-columns:1fr 1fr}}
+.cond{display:inline-block;font-weight:700}
+.cond.bad{color:var(--deny)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;border-top:1px solid var(--line);padding-top:10px}
+.actions .grow{margin-right:auto}
+
+.empty{text-align:center;color:var(--muted);padding:36px 16px;border:1px dashed var(--line);border-radius:12px}
+.empty h3{font-family:var(--display);font-size:20px;margin:0 0 4px;color:var(--ink)}
+
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow);border-radius:999px;padding:12px 20px;font-size:16px;z-index:5}
+
+.scrim{position:fixed;inset:0;background:rgba(10,16,22,.5);display:flex;align-items:flex-end;justify-content:center;z-index:10;padding:16px}
+@media (min-width:640px){.scrim{align-items:center}}
+.sheet{background:var(--surface);border-radius:14px;width:100%;max-width:520px;max-height:calc(100% - 16px);overflow:auto;padding:18px 16px 16px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.sheet h2{font-family:var(--display);font-weight:700;font-size:24px;margin:0 0 2px;text-transform:uppercase;letter-spacing:.01em}
+.sheet .sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+form.f{display:flex;flex-direction:column;gap:12px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld>label,.fld>.lab{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fld input,.fld select,.fld textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:10px 12px;min-height:42px;width:100%}
+.fld textarea{min-height:72px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{flex:1 1 auto;border:1px solid var(--line);border-radius:8px;padding:9px 10px;text-align:center;cursor:pointer;font-weight:600;font-size:14px;background:var(--surface-2)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked+span{color:var(--accent)}
+.seg label:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.hint{font-size:12px;color:var(--muted)}
+.err{color:var(--deny);font-size:13px;min-height:0}
+.foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hdr-right .btn{min-height:34px;padding:6px 10px;font-size:14px}
+.people{display:flex;flex-direction:column;gap:6px}
+.person{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface-2)}
+.person img{width:24px;height:24px;border-radius:50%}
+.person span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.hits button{display:flex;align-items:center;gap:8px;border:0;border-bottom:1px solid var(--line);background:var(--surface);padding:8px 10px;text-align:left;cursor:pointer}
+.hits button:last-child{border-bottom:0}
+.hits img{width:22px;height:22px;border-radius:50%}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.check input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;z-index:20;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(12px);opacity:.6}to{transform:none;opacity:1}}}
+
+.gate{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 20px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;align-items:center}
+.gate h3{font-family:var(--display);font-size:24px;margin:0;text-transform:uppercase}
+.gate p{margin:0;color:var(--muted);max-width:52ch}
+.gate code{font-family:var(--mono);font-size:13px;background:var(--surface-2);padding:2px 6px;border-radius:4px}
+.ms{display:inline-flex;align-items:center;gap:10px}
+.ms i{display:grid;grid-template-columns:8px 8px;gap:2px}
+.ms i b{width:8px;height:8px;display:block}
+.as{display:flex;align-items:center;gap:6px}
+.as select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px;min-height:34px;max-width:230px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">G&amp;G</div>
+      <div><h1>Equipment Requests</h1><p>Request, approve, receive and release jobsite equipment</p></div>
+    </div>
+    <div class="hdr-right"><div class="who" id="who"></div><button class="btn" id="setBtn" hidden>Settings</button></div>
+  </header>
+
+  <nav class="pipeline" id="pipeline" aria-label="Filter by status"></nav>
+
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="Search item, job site or request #" aria-label="Search requests">
+    <label class="toggle"><input type="checkbox" id="mine"> My requests only</label>
+  </div>
+
+  <div class="banner"><span><b>Proof of concept.</b> Sample data only, saved in this browser. Switch “Viewing as” to try each role: crew requests, the superintendent approves, the warehouse checks items back in.</span></div>
+  <div class="list" id="list"></div>
+</div>
+
+<button class="btn primary fab" id="newBtn">+ New</button>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+/* G&G Equipment Requests: proof-of-concept demo.
+ * No sign-in. Pick who you are from the "Viewing as" menu. Data is sample data kept in this browser only.
+ */
+(() => {
+"use strict";
+const CFG = window.GG_CONFIG || {};
+const TZ = "America/Los_Angeles";
+
+const CATS = { rental:"Rental", owned:"Company tool", material:"Material", pallets:"Blocks & pallets" };
+const STATUS = {
+  pending:"Waiting approval", approved:"Approved · en route", denied:"Denied",
+  received:"On site", released:"Headed to warehouse", returned:"Back in warehouse", consumed:"Used up"
+};
+const OPEN = ["pending","approved","received","released"];
+const STAGES = [
+  {key:"open", label:"All open", cls:"all", match:s=>OPEN.includes(s)},
+  {key:"pending", label:"Pending", cls:"pend", match:s=>s==="pending"},
+  {key:"approved", label:"Approved", cls:"appr", match:s=>s==="approved"},
+  {key:"received", label:"On site", cls:"site", match:s=>s==="received"},
+  {key:"released", label:"Returning", cls:"trans", match:s=>s==="released"},
+  {key:"closed", label:"Closed", cls:"done", match:s=>["returned","denied","consumed"].includes(s)},
+];
+const CONDITIONS = ["Good","Minor wear","Damaged","Missing parts / short"];
+
+const DEFAULT_TOOLS = `Drills & drivers:
+Cordless drill/driver
+Impact driver
+Hammer drill
+Rotary hammer (SDS-Plus)
+Rotary hammer (SDS-Max)
+Right-angle drill
+Magnetic drill press
+Cutting:
+Circular saw
+Reciprocating saw
+Jigsaw
+Portable band saw
+Miter / chop saw
+Angle grinder 4-1/2"
+Angle grinder 7"
+Concrete cut-off saw
+Oscillating multi-tool
+Door & hardware:
+Lockset boring jig kit
+Hinge mortise template + router
+Mortise lock jig
+Continuous hinge drilling jig
+Closer / exit device template kit
+Power door planer
+Hole saw kit
+Door jack / door stand
+Frame spreaders
+Fastening:
+Powder-actuated tool (Hilti DX)
+Pop rivet gun
+Rivet nut (nutsert) tool
+Finish nailer
+Air compressor
+Battery caulk gun
+Grout pump (frame grouting)
+Layout:
+Laser level
+Rotary laser
+6' level
+Concrete scanner
+Access & handling:
+6' step ladder
+8' step ladder
+10' step ladder
+12' step ladder
+Extension ladder
+Baker scaffold
+Door / panel cart
+Pallet jack
+Glass suction cups
+Power & site:
+Generator
+100' extension cord
+Spider box
+LED work lights
+HEPA dust extractor
+Shop vac
+MIG welder
+Stick welder + leads`;
+const DEFAULT_RETURNS = `Preinstall:
+Wood pallets
+Wood blocking / dunnage
+Frame spreaders
+Frame shipping crates
+Door shipping crates
+Strapping / banding (for recycle)`;
+
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtTime = ts => ts ? new Date(ts).toLocaleString("en-US",{timeZone:TZ,month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}) : "";
+const fmtDate = d => { if(!d) return ""; const [y,m,dd]=d.split("-").map(Number); return new Date(Date.UTC(y,m-1,dd,12)).toLocaleDateString("en-US",{timeZone:"UTC",weekday:"short",month:"short",day:"numeric"}); };
+const todayLA = () => new Date().toLocaleDateString("en-CA",{timeZone:TZ});
+const daysBetween = (a,b) => Math.max(0, Math.floor((b-a)/86400000));
+const lc = s => String(s||"").trim().toLowerCase();
+const emails = text => [...new Set(String(text||"").split(/[\s,;]+/).map(lc).filter(e => e.includes("@")))];
+
+// ---------- demo people and storage ----------
+const PEOPLE = [
+  { email:"mike.torres@example.com", name:"Mike Torres", role:"crew" },
+  { email:"jess.nguyen@example.com", name:"Jess Nguyen", role:"crew" },
+  { email:"dana.reyes@example.com", name:"Dana Reyes", role:"super" },
+  { email:"sam.okafor@example.com", name:"Sam Okafor", role:"warehouse" },
+];
+const ROLE_LABEL = { crew:"Crew", super:"Superintendent", warehouse:"Warehouse" };
+const KEY = "gg-equipment-demo-v1";
+
+const S = {
+  me:null, isSuper:false, isWarehouse:false,
+  docs:[], stage:"open", q:"", mine:false,
+  catalog:{ tools:DEFAULT_TOOLS, returns:DEFAULT_RETURNS },
+};
+function setMe(p){
+  S.me = p; S.isSuper = p.role==="super"; S.isWarehouse = p.role==="warehouse";
+  try { localStorage.setItem(KEY+":me", p.email); } catch {}
+}
+const by = () => ({ by:S.me.email, byName:S.me.name });
+
+let mem = null; // fallback when browser storage is blocked
+function save(){ const v = JSON.stringify({ docs:S.docs, catalog:S.catalog }); mem = v; try { localStorage.setItem(KEY, v); } catch {} }
+function loadSaved(){ let v = null; try { v = localStorage.getItem(KEY); } catch {} return v ? JSON.parse(v) : null; }
+
+const Store = {
+  async create(id, data){ S.docs.push({ ...data, id }); save(); },
+  async update(doc, patch){ const i = S.docs.findIndex(d => d.id===doc.id); if (i<0) fail("That request was removed."); S.docs[i] = { ...S.docs[i], ...patch }; save(); },
+  async remove(doc){ S.docs = S.docs.filter(d => d.id!==doc.id); save(); },
+};
+
+function seed(){
+  const H = 3600e3, D = 24*H, now = Date.now();
+  const P = e => PEOPLE.find(p=>p.email.startsWith(e));
+  const mk = p => ({ by:p.email, byName:p.name });
+  const mike=P("mike"), jess=P("jess"), dana=P("dana"), sam=P("sam");
+  const ymd = off => new Date(now+off*D).toLocaleDateString("en-CA",{timeZone:TZ});
+  const idd = (pre, off, s) => `${pre}-${new Date(now+off*D).toLocaleDateString("en-CA",{timeZone:TZ}).slice(2).replace(/-/g,"")}-${s}`;
+  const req = (p, off) => ({ requestedBy:p.email, requestedByName:p.name, requestedAt: now+off });
+  return [
+    { id:idd("EQ",0,"K4P"), ...req(mike,-2*H), jobSite:"Kaiser Oakland – Bldg C", item:"19' electric scissor lift", category:"rental", qty:1, unit:"", neededBy:ymd(3), vendor:"Sunbelt Rentals", notes:"Drop at north loading dock. Frame installs on L3 corridor.", status:"pending" },
+    { id:idd("EQ",0,"M2Q"), ...req(jess,-5*H), jobSite:"Stanford Hospital – Level 2", item:"Lockset boring jig kit", category:"owned", qty:2, unit:"", neededBy:ymd(1), vendor:"", notes:"Two crews on hardware starting Monday.", status:"pending" },
+    { id:idd("EQ",-1,"T7R"), ...req(mike,-26*H), jobSite:"SFO Terminal 1", item:"Rotary hammer (SDS-Plus)", category:"owned", qty:1, unit:"", neededBy:ymd(0), vendor:"", notes:"", status:"approved",
+      decision:{ ...mk(dana), at:now-20*H, note:"Pull from shop cage, goes out on the Thursday truck.", po:"" } },
+    { id:idd("EQ",-3,"B9S"), ...req(jess,-3*D), jobSite:"Kaiser Oakland – Bldg C", item:"HM frame anchors, 3-1/2\"", category:"material", qty:6, unit:"box", neededBy:ymd(-1), vendor:"", notes:"", status:"approved",
+      decision:{ ...mk(dana), at:now-3*D+4*H, note:"", po:"" } },
+    { id:idd("EQ",-5,"W3U"), ...req(mike,-5*D), jobSite:"SFO Terminal 1", item:"45' articulating boom lift", category:"rental", qty:1, unit:"", neededBy:ymd(-4), vendor:"United Rentals", notes:"Storefront header work at gates B4–B6.", status:"received",
+      decision:{ ...mk(dana), at:now-5*D+3*H, note:"Approved for one week.", po:"PO 44817" },
+      received:{ ...mk(mike), at:now-4*D, condition:"Minor wear", qty:"1", notes:"Scuff on basket rail, noted on delivery ticket." } },
+    { id:idd("EQ",-6,"H5V"), ...req(jess,-6*D), jobSite:"Stanford Hospital – Level 2", item:"Powder-actuated tool (Hilti DX)", category:"owned", qty:1, unit:"", neededBy:ymd(-5), vendor:"", notes:"", status:"received",
+      decision:{ ...mk(dana), at:now-6*D+2*H, note:"", po:"" },
+      received:{ ...mk(jess), at:now-5*D, condition:"Good", qty:"1", notes:"" } },
+    { id:idd("RT",0,"P8W"), ...req(jess,-3*H), jobSite:"Stanford Hospital – Level 2", item:"Wood pallets", category:"pallets", qty:6, unit:"pallets", notes:"From the HM frame preinstall. Staged at east dock for the 2pm truck.", returnOnly:true, status:"released",
+      released:{ ...mk(jess), at:now-3*H, condition:"Good", ref:"", notes:"" } },
+    { id:idd("EQ",-9,"C1X"), ...req(mike,-9*D), jobSite:"Kaiser Oakland – Bldg C", item:"Baker scaffold", category:"owned", qty:2, unit:"", neededBy:ymd(-8), vendor:"", notes:"", status:"released",
+      decision:{ ...mk(dana), at:now-9*D+H, note:"", po:"" },
+      received:{ ...mk(mike), at:now-8*D, condition:"Good", qty:"2", notes:"" },
+      released:{ ...mk(mike), at:now-6*H, condition:"Minor wear", ref:"", notes:"One caster sticks." } },
+    { id:idd("EQ",-12,"D6Y"), ...req(jess,-12*D), jobSite:"SFO Terminal 1", item:"Magnetic drill press", category:"owned", qty:1, unit:"", neededBy:ymd(-11), vendor:"", notes:"", status:"returned",
+      decision:{ ...mk(dana), at:now-12*D+2*H, note:"", po:"" },
+      received:{ ...mk(jess), at:now-11*D, condition:"Good", qty:"1", notes:"" },
+      released:{ ...mk(jess), at:now-4*D, condition:"Good", ref:"", notes:"" },
+      returned:{ ...mk(sam), at:now-3*D, condition:"Minor wear", qty:"1", offRent:"", notes:"Cord jacket nicked near plug. Tagged for repair." } },
+    { id:idd("EQ",-10,"F2Z"), ...req(mike,-10*D), jobSite:"Kaiser Oakland – Bldg C", item:"Tapcon 1/4\" × 2-3/4\" anchors", category:"material", qty:4, unit:"box", neededBy:ymd(-9), vendor:"", notes:"", status:"consumed",
+      decision:{ ...mk(dana), at:now-10*D+H, note:"", po:"" },
+      received:{ ...mk(mike), at:now-9*D, condition:"Good", qty:"4", notes:"" },
+      released:{ ...mk(mike), at:now-2*D, condition:"", ref:"", notes:"All used." } },
+    { id:idd("EQ",-2,"G4A"), ...req(jess,-2*D), jobSite:"Stanford Hospital – Level 2", item:"12' step ladder", category:"owned", qty:3, unit:"", neededBy:ymd(-1), vendor:"", notes:"", status:"denied",
+      decision:{ ...mk(dana), at:now-2*D+3*H, note:"GC is providing ladders on this job. Use theirs.", po:"" } },
+  ];
+}
+
+// ---------- lists (tool picker) ----------
+function parseList(text){
+  const groups = []; let cur = null;
+  String(text||"").split("\n").map(l=>l.trim()).filter(Boolean).forEach(l => {
+    if (l.endsWith(":")) { cur = { name:l.slice(0,-1).trim(), items:[] }; groups.push(cur); }
+    else { if (!cur) { cur = { name:"", items:[] }; groups.push(cur); } cur.items.push(l); }
+  });
+  return groups.filter(g => g.items.length);
+}
+function optionsHTML(text){
+  return parseList(text).map(g => g.name
+    ? `<optgroup label="${esc(g.name)}">${g.items.map(i=>`<option>${esc(i)}</option>`).join("")}</optgroup>`
+    : g.items.map(i=>`<option>${esc(i)}</option>`).join("")).join("");
+}
+
+const who = (o, fallback="") => (o && (o.byName || o.by)) || fallback;
+function isMine(d){ return S.me && lc(d.requestedBy) === S.me.email; }
+
+// ---------- rendering ----------
+function renderWho(){
+  $("who").innerHTML = `<label class="as"><span>Viewing as</span><select id="asSel" aria-label="Viewing as">${PEOPLE.map(p=>`<option value="${p.email}" ${p.email===S.me.email?"selected":""}>${esc(p.name)} · ${esc(ROLE_LABEL[p.role])}</option>`).join("")}</select></label>`;
+  $("setBtn").hidden = !(S.isSuper || S.isWarehouse);
+  $("asSel").onchange = e => { const p = PEOPLE.find(x=>x.email===e.target.value); setMe(p); render(); toast(`Now viewing as ${p.name} (${ROLE_LABEL[p.role]})`); };
+}
+function renderPipeline(){
+  $("pipeline").innerHTML = STAGES.map(st => {
+    const n = S.docs.filter(d => st.match(d.status) && (!S.mine || isMine(d))).length;
+    return `<button class="stage ${st.cls}" data-stage="${st.key}" aria-pressed="${S.stage===st.key}"><span class="n">${n}</span><span class="l">${st.label}</span></button>`;
+  }).join("");
+}
+function stepHTML(label, cls, whoName, when, extra){
+  return `<li class="step ${cls}"><div class="sl">${label}</div>${whoName?`<div class="sw">${esc(whoName)}</div>`:""}${when?`<div class="sx">${esc(when)}</div>`:""}${extra||""}</li>`;
+}
+function condHTML(c){ if(!c) return ""; const bad = c!=="Good" && c!=="Minor wear"; return `<div class="sx">Condition: <span class="cond ${bad?"bad":""}">${esc(c)}</span></div>`; }
+const sx = (label, v) => (v!=null && v!=="") ? `<div class="sx">${label}${esc(v)}</div>` : "";
+
+function cardHTML(d){
+  const st = d.status;
+  const late = st==="approved" && d.neededBy && d.neededBy < todayLA();
+  const dec = d.decision || {}, rec = d.received || {}, rel = d.released || {}, ret = d.returned || {};
+  const dash = st==="denied" ? "—" : "Not yet";
+  const reqName = d.requestedByName || d.requestedBy || "Someone";
+  let onRent = "";
+  if (d.category==="rental" && rec.at) { const days = daysBetween(rec.at, ret.at || rel.at || Date.now()); onRent = `<span>On rent <b>${days} day${days===1?"":"s"}</b></span>`; }
+
+  const whStep = st==="consumed"
+    ? stepHTML("Warehouse","","","No leftover")
+    : stepHTML("Warehouse", ret.at?"on":"", ret.at?who(ret):"", ret.at?fmtTime(ret.at):(st==="released"?"In transit":dash),
+        condHTML(ret.condition)+sx("Qty back: ",ret.qty)+sx("Off-rent #: ",ret.offRent)+sx("",ret.notes));
+  const relExtra = condHTML(rel.condition)+sx(d.category==="rental"?"Off-rent #: ":"Leftover: ", rel.ref)+sx("",rel.notes);
+
+  let steps, n;
+  if (d.returnOnly) {
+    steps = stepHTML("Sent from site","on",reqName,fmtTime(d.requestedAt),condHTML(rel.condition)) + whStep; n = 2;
+  } else {
+    steps = [
+      stepHTML("Requested","on",reqName,fmtTime(d.requestedAt)),
+      st==="denied"
+        ? stepHTML("Denied","no",who(dec),fmtTime(dec.at), dec.note?`<div class="sx">“${esc(dec.note)}”</div>`:"")
+        : stepHTML("Approved", dec.at?"on":"", dec.at?who(dec):"Superintendent", dec.at?fmtTime(dec.at):"Waiting", (dec.note?`<div class="sx">“${esc(dec.note)}”</div>`:"")+sx("PO / contract: ",dec.po)),
+      stepHTML("Received", rec.at?"on":"", rec.at?who(rec):"", rec.at?fmtTime(rec.at):dash, condHTML(rec.condition)+(rec.qty!=null&&rec.qty!==""&&Number(rec.qty)!==Number(d.qty)?sx("Qty received: ",rec.qty):"")+sx("",rec.notes)),
+      stepHTML("Released", rel.at?"on":"", rel.at?who(rel):"", rel.at?fmtTime(rel.at):dash, relExtra),
+      whStep
+    ].join(""); n = 5;
+  }
+
+  const acts = [];
+  if (S.isSuper) acts.push(`<button class="btn ghost grow" data-act="delete">Delete</button>`);
+  if (st==="pending" && S.isSuper) acts.push(`<button class="btn bad" data-act="deny">Deny</button><button class="btn primary" data-act="approve">Approve</button>`);
+  if (st==="pending" && !S.isSuper) acts.push(`<span class="hint">Waiting on the superintendent</span>`);
+  if (st==="approved") acts.push(`<button class="btn good" data-act="receive">Mark received on site</button>`);
+  if (st==="received") acts.push(`<button class="btn primary" data-act="release">Release from site</button>`);
+  if (st==="released") acts.push((S.isWarehouse || S.isSuper) ? `<button class="btn good" data-act="checkin">Check in at warehouse</button>` : `<span class="hint">Waiting on warehouse check-in</span>`);
+
+  const qtyUnit = `${esc(d.qty)}${d.unit?" "+esc(d.unit):""}`;
+  return `<article class="card" data-s="${esc(st)}" data-id="${esc(d.id)}">
+    <div class="row1"><span class="rid">${esc(d.id)}</span><span class="chip">${esc(CATS[d.category]||"Item")}</span>${d.returnOnly?'<span class="chip">Return</span>':""}${late?'<span class="chip late">Past need-by</span>':""}<span class="pill ${esc(st)}">${esc(STATUS[st]||st)}</span></div>
+    <h3 class="title"><span class="q">${qtyUnit} ×</span> ${esc(d.item)}</h3>
+    <div class="meta"><span>Job <b>${esc(d.jobSite)}</b></span>${d.neededBy?`<span>Needed <b>${esc(fmtDate(d.neededBy))}</b></span>`:""}${d.vendor?`<span>Vendor <b>${esc(d.vendor)}</b></span>`:""}${onRent}</div>
+    ${d.notes?`<div class="note">${esc(d.notes)}</div>`:""}
+    <ol class="steps" style="--n:${n}">${steps}</ol>
+    ${acts.length?`<div class="actions">${acts.join("")}</div>`:""}
+  </article>`;
+}
+
+function render(){
+  renderWho(); renderPipeline();
+  const list = $("list");
+  const stage = STAGES.find(s => s.key===S.stage);
+  const q = S.q.trim().toLowerCase();
+  const rows = S.docs.filter(d => stage.match(d.status) && (!S.mine || isMine(d)) &&
+    (!q || [d.id,d.item,d.jobSite,d.vendor,d.notes,d.requestedByName].some(v => String(v||"").toLowerCase().includes(q))));
+  if (!rows.length) {
+    list.innerHTML = `<div class="empty"><h3>${S.docs.length ? "Nothing here" : "No requests yet"}</h3><p>${S.docs.length ? "Try another status or clear the search." : "Tap “+ New” to request a lift, a tool or materials, or to send blocks and pallets back."}</p></div>`;
+    return;
+  }
+  const mineFirst = d => (S.isSuper && d.status==="pending") || ((S.isWarehouse||S.isSuper) && d.status==="released") ? 0 : 1;
+  rows.sort((a,b) => (mineFirst(a)-mineFirst(b)) || (b.requestedAt||0)-(a.requestedAt||0));
+  list.innerHTML = rows.map(cardHTML).join("");
+}
+
+// ---------- sheets ----------
+function closeSheet(){ $("sheetRoot").innerHTML = ""; }
+function toast(msg){ const r=$("toastRoot"); r.innerHTML=`<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toast.t); toast.t=setTimeout(()=>r.innerHTML="",2600); }
+function seg(name, opts, checked){ return `<div class="seg" role="radiogroup">${opts.map(([v,l])=>`<label><input type="radio" name="${name}" value="${esc(v)}" ${v===checked?"checked":""}><span>${esc(l)}</span></label>`).join("")}</div>`; }
+function sheet(title, sub, body, onSubmit, submitLabel, submitCls="primary"){
+  $("sheetRoot").innerHTML = `<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
+    <h2 id="shT">${esc(title)}</h2><p class="sub">${sub}</p>
+    <form class="f" id="shF" novalidate>${body}<div class="err" id="shErr" role="alert"></div>
+    <div class="foot"><button type="button" class="btn" id="shCancel">Cancel</button><button type="submit" class="btn ${submitCls}" id="shOk">${esc(submitLabel)}</button></div></form></div></div>`;
+  $("scrim").addEventListener("click", e => { if (e.target.id==="scrim") closeSheet(); });
+  $("shCancel").onclick = closeSheet;
+  const f = $("shF");
+  f.addEventListener("submit", async e => {
+    e.preventDefault(); const ok=$("shOk"); ok.disabled=true; $("shErr").textContent="";
+    try {
+      const msg = await onSubmit(new FormData(f));
+      if (msg !== false) { closeSheet(); if (msg) toast(msg); render(); }
+    } catch(err){ console.error(err); $("shErr").textContent = errText(err); }
+    finally { if (document.body.contains(ok)) ok.disabled=false; }
+  });
+  const first = f.querySelector("input:not([type=radio]):not([type=checkbox]),textarea"); first && setTimeout(()=>first.focus(),30);
+}
+function errText(err){
+  if (err && err.userMsg) return err.userMsg;
+  return "Couldn't save that change.";
+}
+const fail = msg => { const e = new Error(msg); e.userMsg = msg; throw e; };
+const need = (v, msg) => String(v||"").trim() || fail(msg);
+const txt = v => String(v||"").trim();
+
+function newId(prefix="EQ"){
+  const d = todayLA().slice(2).replace(/-/g,"");
+  const r = Math.random().toString(36).slice(2,5).toUpperCase();
+  return `${prefix}-${d}-${r}`;
+}
+
+function openNew(mode="request"){
+  const sites = [...new Set(S.docs.map(d=>d.jobSite).filter(Boolean))].slice(0,40);
+  const siteFld = `<div class="fld"><label for="f_site">Job site</label><input id="f_site" name="jobSite" list="siteList" placeholder="e.g. Kaiser Oakland – Bldg C" autocomplete="off"><datalist id="siteList">${sites.map(s=>`<option value="${esc(s)}">`).join("")}</datalist></div>`;
+  const modeFld = `<div class="mode">${seg("mode",[["request","Request equipment"],["return","Send back to warehouse"]],mode)}</div>`;
+  const toolOpts = optionsHTML(S.catalog.tools), returnOpts = optionsHTML(S.catalog.returns);
+  let body, sub, label;
+  if (mode==="request") {
+    sub = "Your superintendent gets it for approval."; label = "Send request";
+    body = modeFld + siteFld + `
+      <div class="fld"><span class="lab">Type</span>${seg("category",[["owned","Company tool"],["rental","Rental"],["material","Material"]],"owned")}</div>
+      <div class="fld" id="toolFld"><label for="f_tool">Tool</label><select id="f_tool" name="tool"><option value="">Choose a tool…</option>${toolOpts}<option value="__other">Other (type it in)</option></select></div>
+      <div class="fld" id="itemFld" hidden><label for="f_item" id="itemLab">What do you need?</label><input id="f_item" name="item" placeholder="e.g. 19' scissor lift, Tapcons 1/4×2-3/4"></div>
+      <div class="two"><div class="fld"><label for="f_qty">Qty</label><input id="f_qty" name="qty" type="number" min="1" step="1" value="1" inputmode="numeric"></div>
+      <div class="fld"><label for="f_unit">Unit (optional)</label><input id="f_unit" name="unit" placeholder="ea, box, pcs"></div></div>
+      <div class="two"><div class="fld"><label for="f_need">Needed by</label><input id="f_need" name="neededBy" type="date" value="${todayLA()}"></div>
+      <div class="fld" id="vendorFld" style="visibility:hidden"><label for="f_vendor">Vendor (rentals)</label><input id="f_vendor" name="vendor" placeholder="e.g. Sunbelt, United"></div></div>
+      <div class="fld"><label for="f_notes">Notes</label><textarea id="f_notes" name="notes" placeholder="Where to drop it, gate code, contact on site…"></textarea></div>`;
+  } else {
+    sub = "For blocks, pallets and other preinstall material going back. The warehouse checks it in."; label = "Send to warehouse";
+    body = modeFld + siteFld + `
+      <div class="fld"><label for="f_ret">What's going back?</label><select id="f_ret" name="retItem"><option value="">Choose…</option>${returnOpts}<option value="__other">Other (type it in)</option></select></div>
+      <div class="fld" id="retOtherFld" hidden><label for="f_reto">Describe it</label><input id="f_reto" name="retOther" placeholder="e.g. Frame shipping crate"></div>
+      <div class="two"><div class="fld"><label for="f_rqty">Qty</label><input id="f_rqty" name="qty" type="number" min="1" step="1" value="1" inputmode="numeric"></div>
+      <div class="fld"><label for="f_runit">Unit (optional)</label><input id="f_runit" name="unit" placeholder="pallets, bundles, pcs"></div></div>
+      <div class="fld"><span class="lab">Condition</span>${seg("condition",[["Good","Reusable"],["Damaged","Damaged / scrap"]],"Good")}</div>
+      <div class="fld"><label for="f_rnotes">Notes</label><textarea id="f_rnotes" name="notes" placeholder="Left at loading dock, on the 2pm truck…"></textarea></div>`;
+  }
+  sheet(mode==="request"?"New request":"Send back to warehouse", sub, body, async fd => {
+    const qty = Number(fd.get("qty"));
+    if (!(qty>0)) fail("Enter a quantity of 1 or more.");
+    const jobSite = need(fd.get("jobSite"),"Enter the job site.");
+    const base = { jobSite, qty, unit:txt(fd.get("unit")), notes:txt(fd.get("notes")), requestedBy:S.me.email, requestedByName:S.me.name, requestedAt:Date.now() };
+    if (mode==="request") {
+      const category = fd.get("category")||"owned";
+      let item = txt(fd.get("item"));
+      if (category==="owned") { const t = fd.get("tool"); if (t && t!=="__other") item = t; }
+      if (!item) fail(category==="owned" ? "Choose a tool, or pick Other and type it in." : "Say what you need.");
+      const id = newId("EQ");
+      await Store.create(id, { ...base, item, category, neededBy:fd.get("neededBy")||"", vendor: category==="rental" ? txt(fd.get("vendor")) : "", status:"pending" });
+      S.stage = "open"; return `Request ${id} sent for approval`;
+    } else {
+      let item = fd.get("retItem"); if (!item || item==="__other") item = txt(fd.get("retOther"));
+      if (!item) fail("Choose what's going back, or pick Other and describe it.");
+      const id = newId("RT");
+      await Store.create(id, { ...base, item, category:"pallets", returnOnly:true, status:"released",
+        released:{ ...by(), at:base.requestedAt, condition:fd.get("condition")||"Good", ref:"", notes:"" } });
+      S.stage = "released"; return `${id} logged. The warehouse will check it in.`;
+    }
+  }, label);
+
+  document.querySelectorAll('input[name=mode]').forEach(r => r.addEventListener("change", () => { if (r.checked) openNew(r.value); }));
+  if (mode==="request") {
+    const sync = () => {
+      const cat = document.querySelector('input[name=category]:checked').value;
+      const tool = $("f_tool").value;
+      $("toolFld").hidden = cat!=="owned";
+      $("itemFld").hidden = cat==="owned" && tool!=="__other";
+      $("itemLab").textContent = cat==="owned" ? "Tool name" : "What do you need?";
+      $("vendorFld").style.visibility = cat==="rental" ? "visible" : "hidden";
+    };
+    document.querySelectorAll('input[name=category]').forEach(r => r.addEventListener("change", sync));
+    $("f_tool").addEventListener("change", sync); sync();
+  } else {
+    $("f_ret").addEventListener("change", e => { $("retOtherFld").hidden = e.target.value!=="__other"; });
+  }
+}
+
+const subOf = d => `${esc(d.id)} · ${esc(d.qty)}${d.unit?" "+esc(d.unit):""} × ${esc(d.item)} · ${esc(d.jobSite)}`;
+
+function openDecide(d, approve){
+  const body = `${approve && d.category==="rental" ? `<div class="fld"><label for="f_po">PO / rental contract # (optional)</label><input id="f_po" name="po"></div>` : ""}
+    <div class="fld"><label for="f_dn">${approve?"Note to crew (optional)":"Reason"}</label><textarea id="f_dn" name="note" placeholder="${approve?"e.g. Delivery Tue AM, call Mike on arrival":"e.g. Use the lift already on the Hayward job"}"></textarea></div>`;
+  sheet(approve?"Approve request":"Deny request", subOf(d), body, async fd => {
+    const note = txt(fd.get("note"));
+    if (!approve && !note) fail("Give the crew a reason.");
+    await Store.update(d, { status: approve?"approved":"denied", decision:{ ...by(), at:Date.now(), note, po:txt(fd.get("po")) } });
+    return approve ? `${d.id} approved` : `${d.id} denied`;
+  }, approve?"Approve":"Deny", approve?"primary":"bad");
+}
+
+function openReceive(d){
+  const body = `<div class="fld"><span class="lab">Condition on arrival</span>${seg("condition",CONDITIONS.map(c=>[c,c]),"Good")}</div>
+    <div class="fld"><label for="f_rq">Qty received</label><input id="f_rq" name="qty" type="number" min="0" step="1" value="${esc(d.qty)}" inputmode="numeric"></div>
+    <div class="fld"><label for="f_rn">Notes</label><textarea id="f_rn" name="notes" placeholder="Scratches, missing charger, delivery ticket #…"></textarea></div>`;
+  sheet("Receive on site", subOf(d), body, async fd => {
+    const condition = fd.get("condition")||"Good", notes = txt(fd.get("notes"));
+    if (condition!=="Good" && !notes) fail("Describe the wear, damage or what's missing.");
+    await Store.update(d, { status:"received", received:{ ...by(), at:Date.now(), condition, qty:fd.get("qty"), notes } });
+    return `${d.id} received on site`;
+  }, "Mark received", "good");
+}
+
+function openRelease(d){
+  const isMat = d.category==="material", isRent = d.category==="rental";
+  const body = `<div class="fld"><span class="lab">Condition leaving site</span>${seg("condition",CONDITIONS.map(c=>[c,c]),"Good")}</div>
+    ${isMat ? `<label class="check"><input type="checkbox" name="allUsed" id="f_used"> All used on the job. Nothing goes back to the warehouse.</label>
+      <div class="fld" id="leftFld"><label for="f_ref">Leftover going back</label><input id="f_ref" name="ref" placeholder="e.g. 2 boxes"></div>` : ""}
+    ${isRent ? `<div class="fld"><label for="f_ref">Off-rent / pickup # (if already called off)</label><input id="f_ref" name="ref" placeholder="From the vendor's call-off"></div>` : ""}
+    <div class="fld"><label for="f_ln">Notes</label><textarea id="f_ln" name="notes" placeholder="On the 2pm truck, staged at loading dock…"></textarea></div>
+    <span class="hint" id="relHint">${isMat?"Leftovers":"It"} will show as headed to the warehouse until the warehouse manager checks it in.</span>`;
+  sheet("Release from site", subOf(d), body, async fd => {
+    const condition = fd.get("condition")||"Good", notes = txt(fd.get("notes"));
+    const used = isMat && fd.get("allUsed");
+    if (!used && condition!=="Good" && condition!=="Minor wear" && !notes) fail("Describe the damage or what's missing.");
+    await Store.update(d, { status: used?"consumed":"released",
+      released:{ ...by(), at:Date.now(), condition: used?"":condition, ref: used?"":txt(fd.get("ref")), notes } });
+    S.stage = used ? "closed" : "released";
+    return used ? `${d.id} closed out` : `${d.id} released. Headed to warehouse.`;
+  }, "Release");
+  if (isMat) $("f_used").addEventListener("change", e => { $("leftFld").hidden = e.target.checked; $("relHint").hidden = e.target.checked; });
+}
+
+function openCheckin(d){
+  const qtyBack = d.category==="material" ? (d.released?.ref || "") : d.qty;
+  const body = `<div class="fld"><span class="lab">Condition checked in</span>${seg("condition",CONDITIONS.map(c=>[c,c]),"Good")}</div>
+    <div class="fld"><label for="f_cq">Qty received back</label><input id="f_cq" name="qty" value="${esc(qtyBack)}"></div>
+    ${d.category==="rental" ? `<div class="fld"><label for="f_or">Off-rent / pickup #</label><input id="f_or" name="offRent" value="${esc(d.released?.ref||"")}"></div>` : ""}
+    <div class="fld"><label for="f_cn">Notes</label><textarea id="f_cn" name="notes" placeholder="Put away in cage B, sent out for repair, short 1 bit…"></textarea></div>`;
+  sheet("Check in at warehouse", subOf(d), body, async fd => {
+    const condition = fd.get("condition")||"Good", notes = txt(fd.get("notes"));
+    if (condition!=="Good" && !notes) fail("Describe the wear, damage or what's missing.");
+    await Store.update(d, { status:"returned", returned:{ ...by(), at:Date.now(), condition, qty:txt(fd.get("qty")), offRent:txt(fd.get("offRent")), notes } });
+    return `${d.id} checked in at warehouse`;
+  }, "Check in", "good");
+}
+
+function openDelete(d){
+  sheet("Delete request?", `${subOf(d)}. This removes it and its history for everyone.`, "", async () => {
+    await Store.remove(d); return `${d.id} deleted`;
+  }, "Delete", "bad");
+}
+
+function openSettings(){
+  const body = `
+    <div class="fld"><label for="f_tools">Company tool list</label><textarea id="f_tools" name="tools" style="min-height:200px">${esc(S.catalog.tools)}</textarea>
+      <span class="hint">One tool per line. A line ending in “:” starts a group, like “Drills &amp; drivers:”.</span></div>
+    <div class="fld"><label for="f_rets">Items sent back to warehouse</label><textarea id="f_rets" name="returns" style="min-height:120px">${esc(S.catalog.returns)}</textarea>
+      <span class="hint">Shown when crew picks “Send back to warehouse”.</span></div>
+    <div class="fld"><span class="lab">Demo data</span><button type="button" class="btn bad" id="resetBtn">Reset to sample data</button>
+      <span class="hint">Clears your changes on this device and reloads the sample requests.</span></div>`;
+  sheet("Settings", "Pick lists for the request form.", body, async fd => {
+    S.catalog = { tools:String(fd.get("tools")||""), returns:String(fd.get("returns")||"") }; save();
+    return "Settings saved";
+  }, "Save");
+  $("resetBtn").onclick = () => { S.docs = seed(); S.catalog = { tools:DEFAULT_TOOLS, returns:DEFAULT_RETURNS }; save(); closeSheet(); render(); toast("Sample data restored"); };
+}
+
+// ---------- events ----------
+document.addEventListener("click", e => {
+  const st = e.target.closest("[data-stage]"); if (st) { S.stage = st.dataset.stage; render(); return; }
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const act = b.dataset.act;
+  const card = b.closest(".card"); const d = card && S.docs.find(x=>x.id===card.dataset.id); if (!d) return;
+  ({approve:()=>openDecide(d,true), deny:()=>openDecide(d,false), receive:()=>openReceive(d), release:()=>openRelease(d), checkin:()=>openCheckin(d), delete:()=>openDelete(d)})[act]?.();
+});
+document.addEventListener("keydown", e => { if (e.key==="Escape" && $("sheetRoot").innerHTML) closeSheet(); });
+$("q").addEventListener("input", e => { S.q = e.target.value; render(); });
+$("mine").addEventListener("change", e => { S.mine = e.target.checked; render(); });
+$("newBtn").addEventListener("click", () => openNew("request"));
+$("setBtn").addEventListener("click", openSettings);
+
+// ---------- start ----------
+(function start(){
+  let saved = null; try { saved = loadSaved(); } catch {}
+  if (saved && Array.isArray(saved.docs)) { S.docs = saved.docs; if (saved.catalog) S.catalog = saved.catalog; }
+  else { S.docs = seed(); save(); }
+  let meEmail = null; try { meEmail = localStorage.getItem(KEY+":me"); } catch {}
+  setMe(PEOPLE.find(p => p.email===meEmail) || PEOPLE[0]);
+  render();
+})();
+})();
+
+</script>
+</body>
+</html>
